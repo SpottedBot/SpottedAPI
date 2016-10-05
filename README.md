@@ -106,3 +106,45 @@ Example:
 curl -X POST http://localhost:8000/submit-data/ -F 'list=[{"message":<Spotted>, "spam": <bool>}, {"message": <Spotted>, "spam": <bool>}]' -H 'Authorization: Token <your-admin-token>'
 ```
 
+## How should I format the dataset?
+
+The dataset should be a list of dicts containg 2 keys, `message` and `spam`. 
+`message` must be a string properly cleaned as described below.
+`spam` must be a lowercase bool.
+
+## Cleaning the dataset
+ 
+ `message` must not contain punctuation, numbers, non alpha, extra spaces, tabs nor newlines.
+ Just letters and their accents, lowercase.
+ 
+ Please also remove stopwords like
+ `['a', 'as', 'o', 'os', 'e', 'é', 'na', 'nas', 'no', 'nos', 'né', 'de', 'da', 'do', 'em', 'um', 'uma', 'uns', 'umas']`
+ 
+ You may use the following code to clean your messages:
+ ```
+ import re
+
+stopwords = ['a', 'as', 'o', 'os', 'e', 'é', 'na', 'nas', 'no', 'nos', 'né', 'de', 'da', 'do', 'em', 'um', 'uma', 'uns', 'umas']
+
+
+def remove_pon(str):
+    return re.sub(r'\W+', ' ', str)
+
+
+def remove_stop(str):
+    return ' '.join(filter(lambda x: x.lower() not in stopwords, str.split()))
+
+
+def remove_num(str):
+    return re.sub(r'\d+', ' ', str)
+
+
+def remove_spaces(str):
+    return " ".join(str.split())
+
+
+def clean(str):
+    return remove_spaces(remove_stop(remove_num(remove_pon(str)))).lower()
+
+cleaned = clean("Foo! Bar?")
+ ```
