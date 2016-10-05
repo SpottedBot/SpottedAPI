@@ -32,7 +32,7 @@ curl -X GET https://spottedapi.herokuapp.com/spam-list/'
 You can perform 1000 of those calls per day.
 
 The response contains 4 objects, `count` which is the number of elements found, `results`, which contains the elements found, `next`, which is the next page and `previous`, the previous page
-In `results` you have 2 sub objects, `message` which, surprisingly, is the Spotted itself and `info`, containing `id`, the Spotted ID
+In `results` you have 2 sub objects, `message` which, surprisingly, is the Spotted itself and `info`, containing `id`, the Spotted ID and `source`, the Spotted source
 
 The pages default to 100 items per page.
 
@@ -52,6 +52,8 @@ response
                 info
                     '
                     id (int)
+                    '
+                    source (str)
 ```
 
 ## How can I predict a message?
@@ -95,7 +97,7 @@ POST https://spottedapi.herokuapp.com/submit-data/
      Header: Authorization
      Value: Token <your-admin-token>
 
-     Form: list: [ {"message": <spotted-as-str>, "spam": <isSpamBool>}, ]
+     Form: list: [ {"message": <spotted-as-str>, "spam": <isSpamBool>, "source": <source-as-str> },]
 ```
 
 You can submit as many Spotteds as necessary, but try to do it 1000 at a time, maximum. You may encounter server timeouts otherwise.
@@ -103,14 +105,15 @@ Please take extra care when submitting, so that the labels are correct.
 
 Example:
 ```
-curl -X POST http://localhost:8000/submit-data/ -F 'list=[{"message":<Spotted>, "spam": <bool>}, {"message": <Spotted>, "spam": <bool>}]' -H 'Authorization: Token <your-admin-token>'
+curl -X POST http://localhost:8000/submit-data/ -F 'list=[{"message":<Spotted>, "spam": <bool>, "source": <source-as-str>}, {"message": <Spotted>, "spam": <bool>, "source": <source-as-str>}]' -H 'Authorization: Token <your-admin-token>'
 ```
 
 ## How should I format the dataset?
 
-The dataset should be a list of dicts containg 2 keys, `message` and `spam`. 
+The dataset should be a list of dicts containg 3 keys, `message`, `spam` and `source`. 
 `message` must be a string properly cleaned as described below.
 `spam` must be a lowercase bool.
+`source` must be a string containing the source name.
 
 ## Cleaning the dataset
  
