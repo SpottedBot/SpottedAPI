@@ -67,11 +67,11 @@ class SubmitData(APIView):
             try:
                 if element['spam']:
                     spam += 1
-                    s = Spam(message=element['message'])
+                    s = Spam(message=element['message'], source=element["source"])
                     s.save()
                 else:
                     n_spam += 1
-                    s = NotSpam(message=element['message'])
+                    s = NotSpam(message=element['message'], source=element["source"])
                     s.save()
             except:
                 continue
