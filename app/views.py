@@ -10,21 +10,30 @@ from rest_framework.throttling import ScopedRateThrottle
 from datasets.models import NotEval, Spam, NotSpam
 import json
 from rest_framework import generics
+from rest_framework import filters
 # Create your views here.
 
 
 class NotSpamList(generics.ListAPIView):
     queryset = NotSpam.objects.all()
     serializer_class = NotSpamSerializer
+    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
+    filter_fields = ('id', 'source')
+    search_fields = ('source', 'message')
+    ordering_fields = ('message', 'source', 'id')
 
 
 class SpamList(generics.ListAPIView):
     queryset = Spam.objects.all()
     serializer_class = SpamSerializer
+    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
+    filter_fields = ('id', 'source')
+    search_fields = ('source', 'message')
+    ordering_fields = ('message', 'source', 'id')
 
 
 class EvalMessage(APIView):
