@@ -3,3 +3,11 @@ venv
 staticfiles
 .env
 db.sqlite3
+.idea
+app/__pycache__/
+app/migrations/__pycache__/
+datasets/__pycache__/
+datasets/migrations/__pycache__/
+processing/__pycache__/
+processing/migrations/__pycache__/
+project/__pycache__/
