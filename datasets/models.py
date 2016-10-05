@@ -9,6 +9,8 @@ from django.db.models.signals import post_save
 class Spam(models.Model):
     message = models.TextField()
     source = models.CharField(max_length=50, default="")
+    likes = models.IntegerField(default=0)
+    time = models.CharField(max_length=50, default="")
 
     def __str__(self):
         return "Spam " + str(self.id) + " from " + str(self.source)
@@ -17,6 +19,8 @@ class Spam(models.Model):
 class NotSpam(models.Model):
     message = models.TextField()
     source = models.CharField(max_length=50, default="")
+    likes = models.IntegerField(default=0)
+    time = models.CharField(max_length=50, default="")
 
     def __str__(self):
         return "Spam " + str(self.id) + " from " + str(self.source)

@@ -22,7 +22,7 @@ class NotSpamList(generics.ListAPIView):
     throttle_scope = 'list'
     filter_fields = ('id', 'source')
     search_fields = ('source', 'message')
-    ordering_fields = ('message', 'source', 'id')
+    ordering_fields = ('message', 'source', 'id', 'time', 'likes')
 
 
 class SpamList(generics.ListAPIView):
@@ -33,7 +33,7 @@ class SpamList(generics.ListAPIView):
     throttle_scope = 'list'
     filter_fields = ('id', 'source')
     search_fields = ('source', 'message')
-    ordering_fields = ('message', 'source', 'id')
+    ordering_fields = ('message', 'source', 'id', 'time', 'likes')
 
 
 class EvalMessage(APIView):
@@ -76,11 +76,11 @@ class SubmitData(APIView):
             try:
                 if element['spam']:
                     spam += 1
-                    s = Spam(message=element['message'], source=element["source"])
+                    s = Spam(message=element['message'], source=element["source"], time=element["time"], likes=element["likes"])
                     s.save()
                 else:
                     n_spam += 1
-                    s = NotSpam(message=element['message'], source=element["source"])
+                    s = NotSpam(message=element['message'], source=element["source"], time=element["time"], likes=element["likes"])
                     s.save()
             except:
                 continue
