@@ -8,16 +8,18 @@ from django.db.models.signals import post_save
 
 class Spam(models.Model):
     message = models.TextField()
+    source = models.CharField(max_length=50)
 
     def __str__(self):
-        return "Spam " + str(self.id)
+        return "Spam " + str(self.id) + " from " + str(self.source)
 
 
 class NotSpam(models.Model):
     message = models.TextField()
+    source = models.CharField(max_length=50)
 
     def __str__(self):
-        return "NotSpam " + str(self.id)
+        return "Spam " + str(self.id) + " from " + str(self.source)
 
 
 class NotEval(models.Model):
