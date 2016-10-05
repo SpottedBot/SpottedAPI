@@ -82,8 +82,9 @@ class SubmitData(APIView):
         }
         spam = 0
         n_spam = 0
-        try:
-            for element in json.loads(content['list']):
+        print("lista" + content["list"])
+        for element in json.loads(content['list']):
+            try:
                 if element['spam']:
                     spam += 1
                     s = Spam(message=element['message'])
@@ -92,11 +93,11 @@ class SubmitData(APIView):
                     n_spam += 1
                     s = NotSpam(message=element['message'])
                     s.save()
-        except:
-            return Response({'status': 'unsuccessful',
-                             'spam_add': spam,
-                             'not_spam_add': n_spam})
+            except:
+                continue
 
         return Response({'status': 'successful',
                          'spam_add': spam,
                          'not_spam_add': n_spam})
+
+
