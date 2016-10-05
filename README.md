@@ -9,42 +9,49 @@ Once the datasets are large enough, I'll begin distributing tokens
 
 ## How do I get a list of Spotted Objects?
 
-Once you have your token, do:
+Access:
+https://spottedapi.herokuapp.com/spam-list/
+or
+https://spottedapi.herokuapp.com/not-spam-list/
+
+You can also perform HTTP calls:
 
 ```sh
 GET https://spottedapi.herokuapp.com/spam-list/
-    Header: Authorization
-    Value: Token <your-token>
 ```
 or
 ```sh
 GET https://spottedapi.herokuapp.com/not-spam-list/
-    Header: Authorization
-    Value: Token <your-token>
 ```
 
 Example:
 ```
-curl -X GET https://spottedapi.herokuapp.com/spam-list/ -H 'Authorization: Token <your-token>'
+curl -X GET https://spottedapi.herokuapp.com/spam-list/'
 ```
 
 You can perform 1000 of those calls per day.
 
-The response contains 2 objects, `count` which is the number of elements found and `data`, which contains the elements found.
-In `data` you have 2 sub objects, `message` which, surprisingly, is the Spotted itself and `info`, containing `id`, the Spotted ID
+The response contains 4 objects, `count` which is the number of elements found, `results`, which contains the elements found, `next`, which is the next page and `previous`, the previous page
+In `results` you have 2 sub objects, `message` which, surprisingly, is the Spotted itself and `info`, containing `id`, the Spotted ID
+
+The pages default to 100 items per page.
 
 ```
 response
         '
+        next (str)
+        '
+        previous (str)
+        '
         count (int)
         '
-        data
-            '
-            message (string)
-            '
-            info
+        results
                 '
-                id (int)
+                message (string)
+                '
+                info
+                    '
+                    id (int)
 ```
 
 ## How can I predict a message?
@@ -91,7 +98,7 @@ POST https://spottedapi.herokuapp.com/submit-data/
      Form: list: [ {"message": <spotted-as-str>, "spam": <isSpamBool>}, ]
 ```
 
-You can submit as many Spotteds as necessary in the list and as many times as you want.
+You can submit as many Spotteds as necessary, but try to do it 1000 at a time, maximum. You may encounter server timeouts otherwise.
 Please take extra care when submitting, so that the labels are correct.
 
 Example:

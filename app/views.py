@@ -9,42 +9,22 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthentic
 from rest_framework.throttling import ScopedRateThrottle
 from datasets.models import NotEval, Spam, NotSpam
 import json
-
+from rest_framework import generics
 # Create your views here.
 
 
-# spam-list/
-class SpamList(APIView):
-    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)
+class NotSpamList(generics.ListAPIView):
+    queryset = NotSpam.objects.all()
+    serializer_class = NotSpamSerializer
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
 
-    def get(self, request):
-        spam = Spam.objects.all()
-        serializer = SpamSerializer(spam, many=True)
-        response = {
-            'count': len(serializer.data),
-            'data': serializer.data
-        }
-        return Response(response)
 
-
-# not-spam-list/
-class NotSpamList(APIView):
-    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)
+class SpamList(generics.ListAPIView):
+    queryset = Spam.objects.all()
+    serializer_class = SpamSerializer
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
-
-    def get(self, request):
-        spam = NotSpam.objects.all()
-        serializer = NotSpamSerializer(spam, many=True)
-        response = {
-            'count': len(serializer.data),
-            'data': serializer.data
-        }
-        return Response(response)
 
 
 class EvalMessage(APIView):
