@@ -75,12 +75,14 @@ class SubmitData(APIView):
         for element in json.loads(content['list']):
             try:
                 if element['spam']:
-                    spam += 1
+
                     s = Spam(message=element['message'], source=element["source"], time=element["time"], likes=element["likes"])
+                    spam += 1
                     s.save()
                 else:
-                    n_spam += 1
+
                     s = NotSpam(message=element['message'], source=element["source"], time=element["time"], likes=element["likes"])
+                    n_spam += 1
                     s.save()
             except:
                 continue
