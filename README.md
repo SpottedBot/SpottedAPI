@@ -32,7 +32,7 @@ curl -X GET https://spottedapi.herokuapp.com/spam-list/'
 You can perform 1000 of those calls per day.
 
 The response contains 4 objects, `count` which is the number of elements found, `results`, which contains the elements found, `next`, which is the next page and `previous`, the previous page
-In `results` you have 2 sub objects, `message` which, surprisingly, is the Spotted itself and `info`, containing `id`, the Spotted ID and `source`, the Spotted source
+In `results` you have 2 sub objects, `message` which, surprisingly, is the Spotted itself and `info`, containing `id`, the Spotted ID, `source`, the Spotted source, `likes`, the number of likes and `time`, the time posted
 
 The pages default to 100 items per page.
 
@@ -47,13 +47,17 @@ response
         '
         results
                 '
-                message (string)
+                message (str)
                 '
                 info
                     '
                     id (int)
                     '
                     source (str)
+                    '
+                    likes (int)
+                    '
+                    time (str)
 ```
 
 ## How can I predict a message?
@@ -105,7 +109,7 @@ Please take extra care when submitting, so that the labels are correct.
 
 Example:
 ```
-curl -X POST http://localhost:8000/submit-data/ -F 'list=[{"message":<Spotted>, "spam": <bool>, "source": <source-as-str>}, {"message": <Spotted>, "spam": <bool>, "source": <source-as-str>}]' -H 'Authorization: Token <your-admin-token>'
+curl -X POST http://localhost:8000/submit-data/ -F 'list=[{"message":<Spotted>, "spam": <bool>, "source": <source-as-str>}]' -H 'Authorization: Token <your-admin-token>'
 ```
 
 ## How should I format the dataset?
@@ -114,6 +118,8 @@ The dataset should be a list of dicts containg 3 keys, `message`, `spam` and `so
 `message` must be a string properly cleaned as described below.
 `spam` must be a lowercase bool.
 `source` must be a string containing the source name.
+`likes` the number of likes
+`time` the time the spotted was posted, following this format: `2015-06-29t23:41:00+0000`
 
 ## Cleaning the dataset
  
