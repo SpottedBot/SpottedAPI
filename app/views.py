@@ -44,7 +44,7 @@ class EvalMessage(APIView):
 
     def post(self, request):
         content = {
-            'message': request.POST['message'],
+            'message': request.data['message'],
             'user': request.user,
         }
 
@@ -67,12 +67,17 @@ class SubmitData(APIView):
 
     def post(self, request):
         content = {
-            'list': request.POST['list'],
+            'list': request.data['list'],
         }
         spam = 0
         n_spam = 0
-        print("lista" + content["list"])
-        for element in json.loads(content['list']):
+
+        if type(content['list']) == str:
+            print("string")
+            content['list'] = json.loads(content['list'])
+        print(content['list'])
+
+        for element in content['list']:
             try:
                 if element['spam']:
 
