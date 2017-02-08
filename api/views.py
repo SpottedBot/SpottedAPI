@@ -56,9 +56,9 @@ class ProcessNewSpotted(APIView):
             reason = suggestion
             action = "moderation"
         else:
-            suggestion = "Aprovar"
+            suggestion = ""
             reason = suggestion
-            action = "approve"
+            action = "moderation"
 
         if action == "approve":
             n = Approved(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, by_api=True)
