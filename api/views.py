@@ -51,9 +51,14 @@ class ProcessNewSpotted(APIView):
         }
 
         # eval message
-        suggestion = ""
-        reason = suggestion
-        action = "moderation"
+        if not content['user'].username == 'localhost':
+            suggestion = ""
+            reason = suggestion
+            action = "moderation"
+        else:
+            suggestion = "Flood"
+            reason = suggestion
+            action = "moderation"
 
         if action == "approve":
             n = Approved(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, by_api=True)
