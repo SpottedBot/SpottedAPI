@@ -1,24 +1,46 @@
 from rest_framework import serializers
-from .models import Spam, NotSpam
+from .models import Approved, Pending, Rejected, Deleted
 
 
-class SpamSerializer(serializers.ModelSerializer):
+class PendingSerializer(serializers.ModelSerializer):
     info = serializers.SerializerMethodField('more_data')
 
     def more_data(self, arg):
-        return {"id": arg.id, "source": arg.source, "likes": arg.likes, "time": arg.time}
+        return {"id": arg.id, "is_safe": arg.is_safe, "suggestion": arg.suggestion, "created": arg.created}
 
     class Meta:
-        model = Spam
+        model = Pending
         fields = ('message', 'info')
 
 
-class NotSpamSerializer(serializers.ModelSerializer):
+class ApprovedSerializer(serializers.ModelSerializer):
     info = serializers.SerializerMethodField('more_data')
 
     def more_data(self, arg):
-        return {"id": arg.id, "source": arg.source, "likes": arg.likes, "time": arg.time}
+        return {"id": arg.id, "is_safe": arg.is_safe, "suggestion": arg.suggestion, "created": arg.created, "by_api": arg.by_api}
 
     class Meta:
-        model = NotSpam
+        model = Approved
+        fields = ('message', 'info')
+
+
+class RejectedSerializer(serializers.ModelSerializer):
+    info = serializers.SerializerMethodField('more_data')
+
+    def more_data(self, arg):
+        return {"id": arg.id, "is_safe": arg.is_safe, "suggestion": arg.suggestion, "created": arg.created, "by_api": arg.by_api, "reason": arg.reason}
+
+    class Meta:
+        model = Rejected
+        fields = ('message', 'info')
+
+
+class DeletedSerializer(serializers.ModelSerializer):
+    info = serializers.SerializerMethodField('more_data')
+
+    def more_data(self, arg):
+        return {"id": arg.id, "is_safe": arg.is_safe, "suggestion": arg.suggestion, "created": arg.created, "by_api": arg.by_api, "by": arg.by}
+
+    class Meta:
+        model = Deleted
         fields = ('message', 'info')
