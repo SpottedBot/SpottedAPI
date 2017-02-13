@@ -184,7 +184,7 @@ class RejectOptions(APIView):
             "opt_3": "Ofensivo",
             "opt_4": "Mais",
             "opt_5": "Depressivo",
-            "opt_6": "Sexual",
+            "opt_6": "Repetido",
             "opt_7": "Spam",
             "opt_8": "Outro"
         }
