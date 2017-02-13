@@ -124,7 +124,7 @@ class RejectedSpotted(APIView):
             'reason': request.data['reason'],
             'user': request.user,
         }
-        if not content['user'].username == 'localhost':
+        if not content['user'].username == 'localhost' or not content['user'].username == 'spottedunicamp':
             instance = get_object_or_404(Pending, id=content['api_id'])
 
             n = Rejected(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion, reason=content['reason'])
