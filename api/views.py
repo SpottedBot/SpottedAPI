@@ -179,13 +179,13 @@ class RejectOptions(APIView):
     def get(self, request):
 
         response = {
-            "opt_1": "Flood",
-            "opt_2": "Off-topic",
+            "opt_1": "Obsceno",
+            "opt_2": "Depressivo",
             "opt_3": "Ofensivo",
             "opt_4": "Mais",
-            "opt_5": "Depressivo",
+            "opt_5": "Off-topic",
             "opt_6": "Repetido",
-            "opt_7": "Spam",
+            "opt_7": "Flood",
             "opt_8": "Outro"
         }
         return Response(response)
@@ -216,10 +216,10 @@ class ForMeDeleteOptions(APIView):
 
         response = {
             "opt_1": "Ofensivo",
-            "opt_2": "Sexual",
+            "opt_2": "Obsceno",
             "opt_3": "Inadequado",
             "opt_4": "Mais",
-            "opt_5": "Comprometidx",
+            "opt_5": "Sou Comprometidx",
             "opt_6": "Prefiro não dizer",
             "opt_8": "Outro"
         }
