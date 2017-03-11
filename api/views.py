@@ -183,7 +183,7 @@ class RejectOptions(APIView):
             "opt_2": "Depressivo",
             "opt_3": "Ofensivo",
             "opt_4": "Mais",
-            "opt_5": "Off-topic",
+            "opt_5": "Spam",
             "opt_6": "Repetido",
             "opt_7": "Flood",
             "opt_8": "Outro"
