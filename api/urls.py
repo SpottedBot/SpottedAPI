@@ -27,4 +27,8 @@ urlpatterns = [
 
     url(r'list_approved/$', views.ApprovedList.as_view(), name='list_approved'),
     url(r'list_rejected/$', views.RejectedList.as_view(), name='list_rejected'),
+
+    url(r'harumi/$', views.HarumiEndpoint.as_view(), name='harumi'),
 ]
+
+# urlpatterns += router.urls

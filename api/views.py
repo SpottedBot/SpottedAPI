@@ -3,17 +3,22 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from datasets.serializers import ApprovedSerializer, RejectedSerializer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.throttling import ScopedRateThrottle
 from datasets.models import Approved, Pending, Rejected, Deleted
 from rest_framework import generics
 from rest_framework import filters
+from rest_condition import Or
+from .roles import IsSpottedPage, IsHarumi
 # Create your views here.
 
 
 class ApprovedList(generics.ListAPIView):
+    """
+        Lista de Spotteds aprovados pela moderação e pela API.
+    """
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAdminUser,)
     queryset = Approved.objects.all()
     serializer_class = ApprovedSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
@@ -25,21 +30,24 @@ class ApprovedList(generics.ListAPIView):
 
 
 class RejectedList(generics.ListAPIView):
+    """
+        Lista de Spotteds rejeitados pela moderação e pela API.
+    """
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAdminUser,)
     queryset = Rejected.objects.all()
     serializer_class = RejectedSerializer
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
-    filter_fields = ('id')
+    filter_fields = ('id',)
     search_fields = ('message')
     ordering_fields = ('message', 'by_api', 'id', 'created', 'suggestion')
 
 
 class ProcessNewSpotted(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [Or(IsAdminUser, IsSpottedPage), ]
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'new_spotted'
 
@@ -86,7 +94,7 @@ class ProcessNewSpotted(APIView):
 
 class ApprovedSpotted(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [Or(IsAdminUser, IsSpottedPage), ]
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'approved_spotted'
 
@@ -114,7 +122,7 @@ class ApprovedSpotted(APIView):
 
 class RejectedSpotted(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [Or(IsAdminUser, IsSpottedPage), ]
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'rejected_spotted'
 
@@ -143,7 +151,7 @@ class RejectedSpotted(APIView):
 
 class DeletedSpotted(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [Or(IsAdminUser, IsSpottedPage), ]
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'deleted_spotted'
 
@@ -224,3 +232,15 @@ class ForMeDeleteOptions(APIView):
             "opt_8": "Outro"
         }
         return Response(response)
+
+
+# Harumi's View
+
+class HarumiEndpoint(APIView):
+    """View de Harumi"""
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = [Or(IsAdminUser, IsHarumi), ]
+
+    def get(self, request):
+
+        return Response({'data': 'nada por aqui'})
