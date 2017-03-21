@@ -25,7 +25,7 @@ class ApprovedList(generics.ListAPIView):
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
     filter_fields = ('id', 'by_api')
-    search_fields = ('message')
+    search_fields = ('message', 'suggestion')
     ordering_fields = ('message', 'by_api', 'id', 'created', 'suggestion')
 
 
@@ -40,8 +40,8 @@ class RejectedList(generics.ListAPIView):
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
-    filter_fields = ('id',)
-    search_fields = ('message')
+    filter_fields = ('id', 'by_api')
+    search_fields = ('message', 'suggestion', 'reason')
     ordering_fields = ('message', 'by_api', 'id', 'created', 'suggestion', 'reason')
 
 
