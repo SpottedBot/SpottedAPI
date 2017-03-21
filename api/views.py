@@ -42,7 +42,7 @@ class RejectedList(generics.ListAPIView):
     throttle_scope = 'list'
     filter_fields = ('id',)
     search_fields = ('message')
-    ordering_fields = ('message', 'by_api', 'id', 'created', 'suggestion')
+    ordering_fields = ('message', 'by_api', 'id', 'created', 'suggestion', 'reason')
 
 
 class ProcessNewSpotted(APIView):
