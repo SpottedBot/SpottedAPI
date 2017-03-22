@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views as rest_views
 from django.contrib import admin
+from django.contrib.auth.views import password_change, password_change_done
 admin.autodiscover()
 
 urlpatterns = [
@@ -12,6 +13,8 @@ urlpatterns = [
 
     url(r'^api/', include('api.urls', namespace='api')),
 
+    url(r'change_password/$', password_change, {'template_name': 'rest_framework/change_password.html'}),
+    url(r'change_password_done/$', password_change_done, {'template_name': 'rest_framework/change_password_done.html'}, name='password_change_done')
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
