@@ -10,6 +10,7 @@ from rest_framework import generics
 from rest_framework import filters
 from rest_condition import Or
 from .roles import IsSpottedPage, IsHarumi
+from rest_framework.reverse import reverse
 # Create your views here.
 
 
@@ -237,10 +238,30 @@ class ForMeDeleteOptions(APIView):
 # Harumi's View
 
 class HarumiEndpoint(APIView):
-    """View de Harumi"""
+    """Se precisar de mais coisa é só avisar"""
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     permission_classes = [Or(IsAdminUser, IsHarumi), ]
 
     def get(self, request):
 
-        return Response({'data': 'nada por aqui'})
+        approved = len(Approved.objects.all())
+        rejected = len(Rejected.objects.all())
+        deleted = len(Deleted.objects.all())
+        pending = len(Pending.objects.all())
+
+        response = {
+            'endpoints': {
+                'reject_options': reverse('api:reject_options', request=request),
+                'my_delete_options': reverse('api:my_delete_options', request=request),
+                'forme_delete_options': reverse('api:forme_delete_options', request=request),
+            },
+            'spotteds': {
+                'approved': approved,
+                'rejected': rejected,
+                'deleted': deleted,
+                'pending': pending,
+                'total': approved + rejected + deleted + pending
+            }
+        }
+
+        return Response(response)
