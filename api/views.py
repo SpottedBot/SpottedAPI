@@ -195,7 +195,7 @@ class RejectOptions(APIView):
             "opt_5": "Spam",
             "opt_6": "Repetido",
             "opt_7": "Flood",
-            "opt_8": "Outro"
+            # "opt_8": "Outro"
         }
         return Response(response)
 
