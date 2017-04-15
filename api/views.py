@@ -193,9 +193,9 @@ class RejectOptions(APIView):
             "opt_3": "Ofensivo ou Ódio",
             "opt_4": "Mais",
             "opt_5": "Bullying individual",
-            "opt_6": "Corrente",
-            "opt_7": "Conteúdo comercial ou Spam",
-            # "opt_8": "Outro"
+            "opt_6": "Conteúdo comercial",
+            "opt_7": "Corrente ou spam",
+            "opt_8": "Não quero escolher outro motivo"
         }
         return Response(response)
 
