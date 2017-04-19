@@ -164,3 +164,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100,
 }
+
+
+# S3 Stuff
+S3_KEY = str(os.environ.get('S3_KEY'))
+S3_SECRET = str(os.environ.get('S3_SECRET'))
+S3_BUCKET = str(os.environ.get('S3_BUCKET'))
