@@ -11,6 +11,8 @@ from rest_framework import filters
 from rest_condition import Or
 from .roles import IsSpottedPage, IsHarumi
 from rest_framework.reverse import reverse
+
+from processing.learning import spotted_analysis
 # Create your views here.
 
 
@@ -59,13 +61,12 @@ class ProcessNewSpotted(APIView):
             'user': request.user,
         }
 
-        # eval message
         if not content['user'].username == 'localhost':
             suggestion = ""
             reason = suggestion
             action = "moderation"
         else:
-            suggestion = ""
+            suggestion = spotted_analysis(content['message'])
             reason = suggestion
             action = "moderation"
 

@@ -3,7 +3,7 @@ import os
 from datasets.models import Approved, Rejected
 import numpy as np
 import requests
-import cPickle
+import pickle
 import boto
 from boto.s3.key import Key
 from django.conf import settings
@@ -26,9 +26,9 @@ def get_data(approved=True, detail=False):
 
     for n, i in enumerate(data):
         if approved:
-            arr[n] = {'message': i[0], 'reason': 'approved', 'suggestion': i[1]}
+            arr[n] = {'message': i.message, 'reason': 'approved', 'suggestion': i.suggestion}
         else:
-            arr[n] = {'message': i[0], 'reason': 'rejected' if not detail else i[1], 'suggestion': i[2]}
+            arr[n] = {'message': i.message, 'reason': 'rejected' if not detail else i.reason, 'suggestion': i.suggestion}
 
     return arr
 
@@ -65,13 +65,13 @@ def reload_classifier(class_type, detailed):
 
     if it does not find it, return None
     """
-    custom_path = class_type + '_detailed' if detailed else ''
+    custom_path = class_type + ('_detailed' if detailed else '')
 
     CLASSIFIER_PATH = 'classifier_' + custom_path + '.pkl'
 
     # Try to find it locally
     if os.path.exists(CLASSIFIER_PATH):
-        return cPickle.load(open(CLASSIFIER_PATH))
+        return pickle.load(open(CLASSIFIER_PATH, 'rb'), encoding='utf-8')
 
     # Try to find it on S3
     conn = boto.connect_s3(settings.S3_KEY, settings.S3_SECRET)
@@ -79,7 +79,7 @@ def reload_classifier(class_type, detailed):
     try:
         k = Key(bucket, CLASSIFIER_PATH)
         k.get_contents_to_filename(CLASSIFIER_PATH)
-        return cPickle.load(open(CLASSIFIER_PATH))
+        return pickle.load(open(CLASSIFIER_PATH, 'rb'), encoding='utf-8')
     except:
         return None
 
@@ -89,14 +89,13 @@ def save_classifier(classifier, class_type, detailed):
     Saves a classifier to memory so that it can be easily accessed later
     """
 
-    custom_path = class_type + '_detailed' if detailed else ''
+    custom_path = class_type + ('_detailed' if detailed else '')
 
     CLASSIFIER_PATH = 'classifier_' + custom_path + '.pkl'
 
-    with open(CLASSIFIER_PATH, 'wb') as f:
-        cPickle.dump(classifier, f)
+    pickle.dump(classifier, open(CLASSIFIER_PATH, "wb"))
 
-    with open(CLASSIFIER_PATH) as f:
+    with open(CLASSIFIER_PATH, 'rb') as f:
 
         conn = boto.connect_s3(settings.S3_KEY, settings.S3_SECRET)
         bucket = conn.get_bucket(settings.S3_BUCKET)

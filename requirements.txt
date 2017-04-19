@@ -12,3 +12,4 @@ numpy
 requests
 sklearn
 boto
+scipy

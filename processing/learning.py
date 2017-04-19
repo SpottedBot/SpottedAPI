@@ -17,7 +17,7 @@ class SpottedAnalyzer(TransformerMixin):
         self.classifier = classifier
         self.detailed = detailed
 
-    def fit(self, X=None, reload=True, y=None):
+    def fit(self, X=None, y=None, reload=True):
 
         # Try to load a classifier
         if reload:
@@ -35,12 +35,16 @@ class SpottedAnalyzer(TransformerMixin):
             ])
 
             if not self.detailed and X is None:
-                self.X = merge_data(get_data(), get_data(False))
+                self.X = [x['message'] for x in merge_data(get_data(), get_data(False))]
+                self.y = [x['reason'] for x in merge_data(get_data(), get_data(False))]
             elif X is None:
-                self.X = rand_reindex(get_data(False, True))
+                self.X = [x['message'] for x in rand_reindex(get_data(False, True))]
+                self.y = [x['reason'] for x in rand_reindex(get_data(False, True))]
+            else:
+                self.X = X
 
             # Fit it
-            self.pipeline.fit(X)
+            self.pipeline.fit(self.X, self.y)
 
             # Save it
             save_classifier(self.pipeline, self.classifier, self.detailed)
@@ -52,4 +56,11 @@ class SpottedAnalyzer(TransformerMixin):
         return self
 
     def transform(self, X):
-        return self.pipeline.transform(X)
+        return self.pipeline.predict(X)
+
+
+def spotted_analysis(spotted):
+    if SpottedAnalyzer().fit().transform([spotted]) == 'approved':
+        return 'approved'
+    else:
+        return SpottedAnalyzer(detailed=True).fit().transform([spotted])[0]
