@@ -62,7 +62,7 @@ class ProcessNewSpotted(APIView):
         }
 
         if not content['user'].username == 'localhost':
-            suggestion = ""
+            suggestion = spotted_analysis(content['message'])
             reason = suggestion
             action = "moderation"
         else:

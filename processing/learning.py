@@ -61,6 +61,6 @@ class SpottedAnalyzer(TransformerMixin):
 
 def spotted_analysis(spotted):
     if SpottedAnalyzer().fit().transform([spotted]) == 'approved':
-        return 'approved'
+        return 'Postar'
     else:
         return SpottedAnalyzer(detailed=True).fit().transform([spotted])[0]
