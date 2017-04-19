@@ -7,3 +7,8 @@ djangorestframework
 django-filter
 django-crispy-forms
 rest_condition
+
+numpy
+requests
+sklearn
+boto
