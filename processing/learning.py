@@ -55,8 +55,8 @@ class SpottedAnalyzer(TransformerMixin):
 
         return self
 
-    def transform(self, X):
-        return self.pipeline.predict(X)
+    def transform(self, X, prob=False):
+        return self.pipeline.predict(X) if not prob else self.pipeline.predict_proba(X)
 
 
 def spotted_analysis(spotted):

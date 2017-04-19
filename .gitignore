@@ -11,3 +11,6 @@ datasets/migrations/__pycache__/
 processing/__pycache__/
 processing/migrations/__pycache__/
 project/__pycache__/
+
+
+*.pkl
