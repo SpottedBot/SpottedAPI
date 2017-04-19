@@ -170,3 +170,15 @@ REST_FRAMEWORK = {
 S3_KEY = str(os.environ.get('S3_KEY'))
 S3_SECRET = str(os.environ.get('S3_SECRET'))
 S3_BUCKET = str(os.environ.get('S3_BUCKET'))
+
+
+# Error report emails
+DEFAULT_FROM_EMAIL = str(os.environ.get('EMAIL_ACCOUNT'))
+EMAIL_HOST_USER = str(os.environ.get('EMAIL_ACCOUNT'))
+EMAIL_HOST_PASSWORD = str(os.environ.get('EMAIL_PASSWORD'))
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+SERVER_EMAIL = str(os.environ.get('EMAIL_ACCOUNT'))
+
+ADMINS = [('Admin', str(os.environ.get('ADMIN_ACCOUNT'))), ]
