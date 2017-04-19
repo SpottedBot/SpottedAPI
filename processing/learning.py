@@ -63,4 +63,4 @@ def spotted_analysis(spotted):
     if SpottedAnalyzer().fit().transform([spotted]) == 'approved':
         return 'Postar'
     else:
-        return SpottedAnalyzer(detailed=True).fit().transform([spotted])[0]
+        return "Rejeitar: " + SpottedAnalyzer(detailed=True).fit().transform([spotted])[0]
