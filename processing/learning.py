@@ -29,17 +29,19 @@ class SpottedAnalyzer(TransformerMixin):
         if loaded_classifier is None:
             stopwords = stop_words()
             self.pipeline = Pipeline([
-                ('vectorizer', CountVectorizer(strip_accents='ascii', analyzer='word', stop_words=stopwords, ngram_range=(1, 3))),
+                ('vectorizer', CountVectorizer(strip_accents='ascii', analyzer='word', stop_words=stopwords, ngram_range=(1, 2))),
                 ('tfidf', TfidfTransformer(use_idf=False)),
                 ('classifier', MultinomialNB() if self.classifier == 'nb' else SVC(C=10, kernel='linear')),
             ])
 
             if not self.detailed and X is None:
-                self.X = [x['message'] for x in merge_data(get_data(), get_data(False))]
-                self.y = [x['reason'] for x in merge_data(get_data(), get_data(False))]
+                tmp = merge_data(get_data(), get_data(False))
+                self.X = tmp['message']
+                self.y = tmp['reason']
             elif X is None:
-                self.X = [x['message'] for x in rand_reindex(get_data(False, True))]
-                self.y = [x['reason'] for x in rand_reindex(get_data(False, True))]
+                tmp = rand_reindex(get_data(False, True))
+                self.X = tmp['message']
+                self.y = tmp['reason']
             else:
                 self.X = X
 
@@ -61,6 +63,6 @@ class SpottedAnalyzer(TransformerMixin):
 
 def spotted_analysis(spotted):
     if SpottedAnalyzer().fit().transform([spotted]) == 'approved':
-        return 'Postar'
+        return True, 'Postar'
     else:
-        return "Rejeitar: " + SpottedAnalyzer(detailed=True).fit().transform([spotted])[0]
+        return False, SpottedAnalyzer(detailed=True).fit().transform([spotted])[0]
