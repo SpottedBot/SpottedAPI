@@ -42,6 +42,7 @@ def clean_details(df):
         ("Ofensivo", ["Ofensivo ou Ódio", "Bullying individual"]),
         ("Spam", ["Corrente ou spam", "Conteúdo comercial", "Spam / Propaganda"]),
         ("Obsceno", ["Obsceno ou Assédio"]),
+        ("Assédio", [False]),
         ("Off-topic", [False]),
         ("Depressivo", [False])
     ]
