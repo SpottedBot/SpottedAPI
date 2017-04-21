@@ -189,14 +189,14 @@ class RejectOptions(APIView):
     def get(self, request):
 
         response = {
-            "opt_1": "Obsceno ou Assédio",
+            "opt_1": "Obsceno",
             "opt_2": "Depressivo",
-            "opt_3": "Ofensivo ou Ódio",
+            "opt_3": "Ofensivo",
             "opt_4": "Mais",
-            "opt_5": "Bullying individual",
-            "opt_6": "Conteúdo comercial",
-            "opt_7": "Corrente ou spam",
-            "opt_8": "Não quero escolher outro motivo"
+            "opt_5": "Assédio",
+            "opt_6": "Spam / Propaganda",
+            "opt_7": "Off-topic",
+            "opt_8": "Repetido"
         }
         return Response(response)
 
