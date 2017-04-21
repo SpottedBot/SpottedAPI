@@ -62,13 +62,19 @@ class ProcessNewSpotted(APIView):
         }
 
         if not content['user'].username == 'localhost':
-            publish, suggestion = spotted_analysis(content['message'])
+            publish, suggestion, percentage = spotted_analysis(content['message'])
             reason = suggestion
-            action = "moderation"
+            if publish and percentage > 0.85:
+                action = "approve"
+            else:
+                action = "moderation"
         else:
-            publish, suggestion = spotted_analysis(content['message'])
+            publish, suggestion, percentage = spotted_analysis(content['message'])
             reason = suggestion
-            action = "moderation"
+            if publish and percentage > 0.85:
+                action = "approve"
+            else:
+                action = "moderation"
 
         if action == "approve":
             n = Approved(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, by_api=True)
