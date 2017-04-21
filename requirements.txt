@@ -13,3 +13,4 @@ requests
 sklearn
 boto
 scipy
+pandas
