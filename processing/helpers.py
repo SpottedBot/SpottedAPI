@@ -2,6 +2,7 @@ import os
 
 from datasets.models import Approved, Rejected
 import numpy as np
+import pandas as pd
 import requests
 import pickle
 import boto
@@ -9,7 +10,7 @@ from boto.s3.key import Key
 from django.conf import settings
 
 
-def get_data(approved=True, detail=False):
+def get_data(approved=True, detail=False, clean=True):
     """Get Data
     returns a numpy array of dicts containing spotteds as specified
 
@@ -22,15 +23,35 @@ def get_data(approved=True, detail=False):
     else:
         data = Rejected.objects.all()
 
-    arr = np.empty(shape=(len(data)), dtype=dict)
+    if approved:
+        return pd.DataFrame([[x.message, "aprovado", x.suggestion] for x in data], columns=['message', "reason", "suggestion"])
+    else:
+        rejected = pd.DataFrame([[x.message, x.reason, x.suggestion] for x in data], columns=['message', "reason", "suggestion"])
+        if clean:
+            rejected = clean_details(rejected)
+        if detail:
+            return rejected
+        return rejected.replace({'reason': {'^(.*?)$': 'rejeitado'}}, regex=True)
 
-    for n, i in enumerate(data):
-        if approved:
-            arr[n] = {'message': i.message, 'reason': 'approved', 'suggestion': i.suggestion}
-        else:
-            arr[n] = {'message': i.message, 'reason': 'rejected' if not detail else i.reason, 'suggestion': i.suggestion}
 
-    return arr
+def clean_details(df):
+    """Clean Details
+    merges and removes unwanted columns
+    """
+    details_rej = [
+        ("Ofensivo", ["Ofensivo ou Ódio", "Bullying individual"]),
+        ("Spam", ["Corrente ou spam", "Conteúdo comercial", "Spam / Propaganda"]),
+        ("Obsceno", ["Obsceno ou Assédio"]),
+        ("Off-topic", [False]),
+        ("Depressivo", [False])
+    ]
+    res = pd.DataFrame()
+    for t in details_rej:
+        for c in t[1]:
+            if t[0]:
+                df = df.replace({'reason': {c: t[0]}})
+        res = res.append(df[df['reason'] == t[0]], ignore_index=True)
+    return res
 
 
 def rand_reindex(arr):
@@ -38,9 +59,7 @@ def rand_reindex(arr):
     randomly reindexes an array
     """
 
-    rand = np.arange(len(arr))
-    np.random.shuffle(rand)
-    return arr[rand]
+    return arr.reindex(np.random.permutation(arr.index))
 
 
 def merge_data(approved, rejected, ratio=1):
@@ -50,8 +69,8 @@ def merge_data(approved, rejected, ratio=1):
     """
 
     approved = rand_reindex(approved)
-    approved = approved[:(round(len(rejected) * ratio))]
-    return rand_reindex(np.append(approved, rejected))
+    approved = approved.iloc[:(round(len(rejected) * ratio))]
+    return rand_reindex(approved.append(rejected, ignore_index=True))
 
 
 def stop_words():
