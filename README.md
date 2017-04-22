@@ -1,11 +1,9 @@
 # Spotted API
 
-Basic RESTful API to list, predict and hold Spotted Objects from SpottedBot apps
+RESTful API and AI processing service that uses machine learning to analyse, process and gerate predictions for SpottedBot queries.
 
-## Getting an Account
 
-You can't.
-Once the datasets are large enough, I'll begin distributing accounts
+*The following endpoints are mostly deprecated. If you want to use this API, set up a (SpottedBot)[https://github.com/Maronato/SpottedBot] and then contact me*
 
 ## Getting an Access Token
 
@@ -127,7 +125,7 @@ curl -X POST https://spottedapi.herokuapp.com/submit-data/ -F 'list=[{"message":
 
 ## How should I format the dataset?
 
-The dataset should be a list of dicts containg 3 keys, `message`, `spam` and `source`. 
+The dataset should be a list of dicts containg 3 keys, `message`, `spam` and `source`.
 `message` must be a string properly cleaned as described below.
 `spam` must be a lowercase bool.
 `source` must be a string containing the source name.
@@ -135,13 +133,13 @@ The dataset should be a list of dicts containg 3 keys, `message`, `spam` and `so
 `time` the time the spotted was posted, following this format: `2015-06-29t23:41:00+0000`
 
 ## Cleaning the dataset
- 
+
  `message` must not contain punctuation, numbers, non alpha, extra spaces, tabs nor newlines.
  Just letters and their accents, lowercase.
- 
+
  Please also remove stopwords like
  `['a', 'as', 'o', 'os', 'e', 'é', 'na', 'nas', 'no', 'nos', 'né', 'de', 'da', 'do', 'em', 'um', 'uma', 'uns', 'umas']`
- 
+
  You may use the following code to clean your messages:
  ```
  import re
