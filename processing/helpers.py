@@ -87,7 +87,7 @@ def reload_classifier(class_type, detailed):
     """
     custom_path = class_type + ('_detailed' if detailed else '')
 
-    CLASSIFIER_PATH = 'classifier_' + custom_path + '.pkl'
+    CLASSIFIER_PATH = 'processing/classifiers/classifier_' + custom_path + '.pkl'
 
     # Try to find it locally
     if os.path.exists(CLASSIFIER_PATH):
@@ -111,7 +111,7 @@ def save_classifier(classifier, class_type, detailed):
 
     custom_path = class_type + ('_detailed' if detailed else '')
 
-    CLASSIFIER_PATH = 'classifier_' + custom_path + '.pkl'
+    CLASSIFIER_PATH = 'processing/classifiers/classifier_' + custom_path + '.pkl'
 
     pickle.dump(classifier, open(CLASSIFIER_PATH, "wb"))
 
