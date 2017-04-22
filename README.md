@@ -3,7 +3,7 @@
 RESTful API and AI processing service that uses machine learning to analyse, process and gerate predictions for SpottedBot queries.
 
 
-*The following endpoints are mostly deprecated. If you want to use this API, set up a (SpottedBot)[https://github.com/Maronato/SpottedBot] and then contact me*
+*The following endpoints are mostly deprecated. If you want to use this API, set up a [SpottedBot](https://github.com/Maronato/SpottedBot) and then contact me*
 
 ## Getting an Access Token
 
