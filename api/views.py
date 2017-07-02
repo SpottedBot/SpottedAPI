@@ -93,6 +93,7 @@ class ProcessNewSpotted(APIView):
             nid = -1
 
         response = {
+            'confidence': percentage,
             'action': action,
             'api_id': nid,
             'suggestion': ("Rejeitar - " + suggestion) if not publish else suggestion
