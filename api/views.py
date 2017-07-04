@@ -142,16 +142,12 @@ class RejectedSpotted(APIView):
             'user': request.user,
         }
         if not content['user'].username == 'localhost':
-            try:
-                # instance = get_object_or_404(Pending, id=content['api_id'])
-                instance = Pending.objects.get(id=content['api_id'])
+            instance = get_object_or_404(Pending, id=content['api_id'])
 
-                n = Rejected(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion, reason=content['reason'])
-                n.save()
-                nid = n.id
-                instance.delete()
-            except:
-                nid = -1
+            n = Rejected(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion, reason=content['reason'])
+            n.save()
+            nid = n.id
+            instance.delete()
 
         else:
             nid = -1
