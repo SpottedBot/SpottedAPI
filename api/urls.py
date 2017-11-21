@@ -29,6 +29,8 @@ urlpatterns = [
     url(r'list_rejected/$', views.RejectedList.as_view(), name='list_rejected'),
 
     url(r'harumi/$', views.HarumiEndpoint.as_view(), name='harumi'),
+
+    url(r'get_coinhive_stats/$', views.CoinhiveStats.as_view(), name='coinhivestats'),
 ]
 
 # urlpatterns += router.urls

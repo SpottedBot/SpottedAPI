@@ -182,3 +182,7 @@ EMAIL_PORT = 587
 SERVER_EMAIL = str(os.environ.get('EMAIL_ACCOUNT'))
 
 ADMINS = [('Admin', str(os.environ.get('ADMIN_ACCOUNT'))), ]
+
+
+# Coinhive stuff
+COINHIVE_SECRET = str(os.environ.get('COINHIVE_SECRET'))

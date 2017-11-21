@@ -11,6 +11,8 @@ from rest_framework import filters
 from rest_condition import Or
 from .roles import IsSpottedPage, IsHarumi
 from rest_framework.reverse import reverse
+from django.conf import settings
+import requests
 
 from processing.learning import spotted_analysis
 # Create your views here.
@@ -275,5 +277,29 @@ class HarumiEndpoint(APIView):
                 'total': approved + rejected + deleted + pending
             }
         }
+
+        return Response(response)
+
+
+class CoinhiveStats(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+
+        ch_secret = settings.COINHIVE_SECRET
+
+        site_stats = requests.get("https://api.coinhive.com/stats/site/", params={'secret': ch_secret}).json()
+        payout_stats = requests.get("https://api.coinhive.com/stats/payout/", params={'secret': ch_secret}).json()
+
+        if not site_stats['success'] or not payout_stats['success']:
+            return Response({'success': False})
+
+        response = {'success': True}
+        response['hashesPerSecond'] = site_stats['hashesPerSecond']
+        response['hashesTotal'] = site_stats['hashesTotal']
+        response['payoutXmr'] = (site_stats['hashesTotal'] / 1000000) * payout_stats['payoutPer1MHashes']
+        response['payoutUsd'] = response['payoutXmr'] * payout_stats['xmrToUsd']
+        response['source'] = 'https://coinhive.com/info/faq'
 
         return Response(response)
