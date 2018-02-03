@@ -66,18 +66,18 @@ class ProcessNewSpotted(APIView):
         if content['user'].username != 'localhost':
             publish, suggestion, percentage = spotted_analysis(content['message'])
             reason = suggestion
-            if publish and percentage > 0.75:
+            if publish and percentage > 0.70:
                 action = "approve"
-            elif not publish and percentage < 0.2:
+            elif not publish and percentage < 0.3:
                 action = "reject"
             else:
                 action = "moderation"
         else:
             publish, suggestion, percentage = spotted_analysis(content['message'])
             reason = suggestion
-            if publish and percentage > 0.75:
+            if publish and percentage > 0.70:
                 action = "approve"
-            elif not publish and percentage < 0.2:
+            elif not publish and percentage < 0.3:
                 action = "reject"
             else:
                 action = "moderation"
