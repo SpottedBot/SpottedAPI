@@ -11,6 +11,7 @@ class Pending(models.Model):
     is_safe = models.BooleanField(default=True)
     suggestion = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
+    origin = models.CharField(max_length=30, default='spottedunicamp')
 
     def __str__(self):
         return "Pending " + str(self.id)
@@ -22,6 +23,7 @@ class Approved(models.Model):
     suggestion = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     by_api = models.BooleanField(default=False)
+    origin = models.CharField(max_length=30, default='spottedunicamp')
 
     def __str__(self):
         return "Approved " + str(self.id)
@@ -34,6 +36,7 @@ class Rejected(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     by_api = models.BooleanField(default=False)
     reason = models.CharField(max_length=100)
+    origin = models.CharField(max_length=30, default='spottedunicamp')
 
     def __str__(self):
         return "Rejected " + str(self.id)
@@ -47,6 +50,7 @@ class Deleted(models.Model):
     by_api = models.BooleanField(default=False)  # Is going to be true if the spotted was approved by the api
     reason = models.CharField(max_length=100)
     by = models.CharField(max_length=100)
+    origin = models.CharField(max_length=30, default='spottedunicamp')
 
     def __str__(self):
         return "Deleted " + str(self.id)

@@ -10,7 +10,7 @@ class PendingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pending
-        fields = ('message', 'info')
+        fields = ('message', 'info', 'origin')
 
 
 class ApprovedSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class ApprovedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Approved
-        fields = ('message', 'info')
+        fields = ('message', 'info', 'origin')
 
 
 class RejectedSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class RejectedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rejected
-        fields = ('message', 'info')
+        fields = ('message', 'info', 'origin')
 
 
 class DeletedSerializer(serializers.ModelSerializer):
@@ -43,4 +43,4 @@ class DeletedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Deleted
-        fields = ('message', 'info')
+        fields = ('message', 'info', 'origin')

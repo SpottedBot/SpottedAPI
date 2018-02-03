@@ -63,7 +63,7 @@ class ProcessNewSpotted(APIView):
             'user': request.user,
         }
 
-        if not content['user'].username == 'localhost':
+        if content['user'].username != 'localhost':
             publish, suggestion, percentage = spotted_analysis(content['message'])
             reason = suggestion
             if publish and percentage > 0.75:
@@ -83,11 +83,11 @@ class ProcessNewSpotted(APIView):
                 action = "moderation"
 
         if action == "approve":
-            n = Approved(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, by_api=True)
+            n = Approved(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, origin=content['user'].username, by_api=True)
         elif action == "reject":
-            n = Rejected(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, by_api=True, reason=reason)
+            n = Rejected(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, origin=content['user'].username, by_api=True, reason=reason)
         elif action == "moderation":
-            n = Pending(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion)
+            n = Pending(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, origin=content['user'].username)
         else:
             n = None
 
@@ -122,7 +122,7 @@ class ApprovedSpotted(APIView):
         if not content['user'].username == 'localhost':
             instance = get_object_or_404(Pending, id=content['api_id'])
 
-            n = Approved(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion)
+            n = Approved(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion, origin=content['user'].username)
             n.save()
             nid = n.id
             instance.delete()
@@ -150,7 +150,7 @@ class RejectedSpotted(APIView):
         if not content['user'].username == 'localhost':
             instance = get_object_or_404(Pending, id=content['api_id'])
 
-            n = Rejected(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion, reason=content['reason'])
+            n = Rejected(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion, reason=content['reason'], origin=content['user'].username)
             n.save()
             nid = n.id
             instance.delete()
@@ -181,7 +181,7 @@ class DeletedSpotted(APIView):
         if not content['user'].username == 'localhost':
             instance = get_object_or_404(Approved, id=content['api_id'])
 
-            n = Deleted(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion, by_api=instance.by_api, reason=content['reason'], by=content['by'])
+            n = Deleted(message=instance.message, is_safe=instance.is_safe, suggestion=instance.suggestion, by_api=instance.by_api, reason=content['reason'], by=content['by'], origin=content['user'].username)
             n.save()
             nid = n.id
             instance.delete()
