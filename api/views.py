@@ -60,6 +60,7 @@ class ProcessNewSpotted(APIView):
         content = {
             'message': request.data['message'],
             'is_safe': request.data['is_safe'],
+            'has_attachment': request.data.get('has_attachment', False),
             'user': request.user,
         }
 
@@ -81,6 +82,10 @@ class ProcessNewSpotted(APIView):
                 action = "reject"
             else:
                 action = "moderation"
+
+        # Send spotteds that contain attachments to moderation
+        if content['has_attachment'] and action == 'approve':
+            action = 'moderation'
 
         if action == "approve":
             n = Approved(message=content['message'], is_safe=content['is_safe'], suggestion=suggestion, origin=content['user'].username, by_api=True)
