@@ -6,7 +6,7 @@ from django.contrib.auth.views import password_change, password_change_done
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^get-token/', rest_views.obtain_auth_token),  # pass username and password as POST fields
