@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from datasets.serializers import ApprovedSerializer, RejectedSerializer
@@ -26,7 +27,7 @@ class ApprovedList(generics.ListAPIView):
     permission_classes = (IsAdminUser,)
     queryset = Approved.objects.all()
     serializer_class = ApprovedSerializer
-    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
     filter_fields = ('id', 'by_api')
@@ -42,7 +43,7 @@ class RejectedList(generics.ListAPIView):
     permission_classes = (IsAdminUser,)
     queryset = Rejected.objects.all()
     serializer_class = RejectedSerializer
-    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
     throttle_classes = (ScopedRateThrottle,)
     throttle_scope = 'list'
     filter_fields = ('id', 'by_api')
