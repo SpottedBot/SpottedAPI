@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 from . import views
 
+app_name = 'api'
+
 urlpatterns = [
     url(r'process_new_post/$', views.ProcessNewSpotted.as_view(), name='process_new_post'),
     url(r'process_approved/$', views.ApprovedSpotted.as_view(), name='process_approved'),
