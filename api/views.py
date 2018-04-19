@@ -65,6 +65,11 @@ class ProcessNewSpotted(APIView):
             'user': request.user,
         }
 
+        if isinstance(content['is_safe'], str):
+            content['is_safe'] = eval(content['is_safe'])
+        if isinstance(content['has_attachment'], str):
+            content['has_attachment'] = eval(content['has_attachment'])
+
         if content['user'].username != 'localhost':
             publish, suggestion, percentage = spotted_analysis(content['message'])
             reason = suggestion
