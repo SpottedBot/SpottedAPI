@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'api',
     'rest_framework',
     'datasets',
+    'chatbot',
     'rest_framework.authtoken',
     'processing',
     'crispy_forms',
@@ -154,6 +155,8 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
+        'process_chat_message': '1000/day',
+        'chatsubmit': '1000/day',
         'list': '1000/day',
         'new_spotted': '1000/day',
         'approved_spotted': '1000/day',

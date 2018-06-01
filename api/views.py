@@ -1,17 +1,21 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.response import Response
 from datasets.serializers import ApprovedSerializer, RejectedSerializer
+from chatbot.serializers import ChatSubmitSerializer, ChatDetailSerializer, ChatListSerializer, MessageSerializer, ProcessMessageSerializer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.throttling import ScopedRateThrottle
 from datasets.models import Approved, Pending, Rejected, Deleted
+from chatbot.models import Chat, Message
 from rest_framework import generics
 from rest_framework import filters
 from rest_condition import Or
 from .roles import IsSpottedPage, IsHarumi
 from rest_framework.reverse import reverse
+from rest_framework import status
 from django.conf import settings
 import requests
 
@@ -20,9 +24,8 @@ from processing.learning import spotted_analysis
 
 
 class ApprovedList(generics.ListAPIView):
-    """
-        Lista de Spotteds aprovados pela moderação e pela API.
-    """
+    """Lista de Spotteds aprovados pela moderação e pela API."""
+
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAdminUser,)
     queryset = Approved.objects.all()
@@ -36,9 +39,8 @@ class ApprovedList(generics.ListAPIView):
 
 
 class RejectedList(generics.ListAPIView):
-    """
-        Lista de Spotteds rejeitados pela moderação e pela API.
-    """
+    """Lista de Spotteds rejeitados pela moderação e pela API."""
+
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     permission_classes = (IsAdminUser,)
     queryset = Rejected.objects.all()
@@ -263,7 +265,8 @@ class ForMeDeleteOptions(APIView):
 # Harumi's View
 
 class HarumiEndpoint(APIView):
-    """Se precisar de mais coisa é só avisar"""
+    """Se precisar de mais coisa é só avisar."""
+
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
     permission_classes = [Or(IsAdminUser, IsHarumi), ]
 
@@ -290,6 +293,82 @@ class HarumiEndpoint(APIView):
         }
 
         return Response(response)
+
+
+class ProcessChatMessage(generics.GenericAPIView):
+    serializer_class = ProcessMessageSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = [Or(IsAdminUser, IsSpottedPage), ]
+    throttle_classes = (ScopedRateThrottle,)
+    throttle_scope = 'process_chat_message'
+
+    def post(self, request, *args, **kwargs):
+        serializer = ProcessMessageSerializer(data=request.data)
+        serializer.is_valid(True)
+        message = serializer.data['message']
+
+        # Processa mensagem
+        # Mágica
+        # Fim do processamento
+        result = message
+        result_status = False
+
+        response = {
+            'result': result,
+            'result_status': result_status
+        }
+        return Response(response)
+
+
+class ChatSubmit(generics.CreateAPIView):
+    """Chat Submit.
+
+    Receives data from a new message from the chatbots. If the chat is new, create it.
+    Otherwise just append to the conversation.
+    """
+
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChatSubmitSerializer
+    throttle_classes = (ScopedRateThrottle,)
+    throttle_scope = 'chatsubmit'
+
+    def create(self, request, *args, **kwargs):
+        """Custom Create method.
+
+        Appends origin to the request data
+        """
+        data = {key: value for key, value in request.data.items()}
+        data['origin'] = request.user.username
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        # headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_success_headers(self, data):
+        return {}
+
+
+class ChatListView(generics.ListAPIView):
+    queryset = Chat.objects.all()
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAdminUser,)
+    serializer_class = ChatListSerializer
+
+
+class ChatDetailView(generics.RetrieveDestroyAPIView):
+    queryset = Chat.objects.all()
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAdminUser,)
+    serializer_class = ChatDetailSerializer
+
+
+class MessageViewset(viewsets.ReadOnlyModelViewSet):
+    queryset = Message.objects.all()
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAdminUser,)
+    serializer_class = MessageSerializer
 
 
 class CoinhiveStats(APIView):
