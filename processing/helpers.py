@@ -21,7 +21,7 @@ def get_data(approved=True, detail=False, clean=True, filter_origin='spottedunic
     if approved:
         data = Approved.objects.all() if not filter_origin else Approved.objects.filter(origin=filter_origin)
     else:
-        data = Rejected.objects.all() if not filter_origin else Approved.objects.filter(origin=filter_origin)
+        data = Rejected.objects.all() if not filter_origin else Rejected.objects.filter(origin=filter_origin)
 
     if approved:
         return pd.DataFrame([[x.message, "aprovado", x.suggestion] for x in data], columns=['message', "reason", "suggestion"])
