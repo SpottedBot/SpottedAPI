@@ -21,3 +21,5 @@ six==1.11.0
 sklearn==0.0
 urllib3==1.22
 whitenoise==3.3.1
+# django-maintenance-mode==0.10.0
+django-import-export==1.2.0

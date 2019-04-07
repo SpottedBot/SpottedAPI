@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'django_filters',
     'rest_condition',
+    'import_export',
 
 )
 
