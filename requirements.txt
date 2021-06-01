@@ -19,7 +19,7 @@ scikit-learn==0.19.1
 scipy==1.0.1
 six==1.11.0
 sklearn==0.0
-urllib3==1.22
+urllib3==1.26.5
 whitenoise==3.3.1
 # django-maintenance-mode==0.10.0
 django-import-export==1.2.0
